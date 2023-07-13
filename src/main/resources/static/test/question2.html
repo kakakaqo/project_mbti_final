@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- JavaScript 및 의존성 -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<title>MBTI 유형 검사</title>
+	<script>
+		$(document).ready(function() {
+			$('#btnSubmit').on('click', function() {
+				var radios = $('input[type="radio"]:checked');
+				if (radios.length !== 20) {
+					alert("모든 항목을 체크해주세요!");
+				} else {
+					var selectionEI = {
+						E: 0,
+						I: 0
+					};
+					var selectionSN = {
+						S: 0,
+						N: 0
+					};
+					var selectionTF = {
+						T: 0,
+						F: 0
+					};
+					var selectionJP = {
+						J: 0,
+						P: 0
+					};
+
+					radios.each(function() {
+						var name = $(this).attr('name');
+						var selectedOption = $(this).val();
+
+						if (name === 'question1' || name === 'question2' || name === 'question3' || name === 'question4' || name === 'question5') {
+							selectionEI[selectedOption]++;
+						} else if (name === 'question6' || name === 'question7' || name === 'question8' || name === 'question9' || name === 'question10') {
+							selectionSN[selectedOption]++;
+						} else if (name === 'question11' || name === 'question12' || name === 'question13' || name === 'question14' || name === 'question15') {
+							selectionTF[selectedOption]++;
+						} else if (name === 'question16' || name === 'question17' || name === 'question18' || name === 'question19' || name === 'question20') {
+							selectionJP[selectedOption]++;
+						}
+					});
+
+					var result = '';
+
+					if (selectionEI.E > selectionEI.I) {
+						result += 'E';
+					} else {
+						result += 'I';
+					}
+
+					if (selectionSN.S > selectionSN.N) {
+						result += 'S';
+					} else {
+						result += 'N';
+					}
+
+					if (selectionTF.T > selectionTF.F) {
+						result += 'T';
+					} else {
+						result += 'F';
+					}
+
+					if (selectionJP.J > selectionJP.P) {
+						result += 'J';
+					} else {
+						result += 'P';
+					}
+
+					alert("당신의 MBTI는 " + result + "입니다!");
+				}
+			});
+		});
+	</script>
+</head>
+<meta charset="UTF-8">
+<title>재미로 알아보는 MBTI 유형 검사</title>
+<body>
+    <h1 style="text-align: center;">MBTI 유형 검사 (20문항)</h1>
+	<hr>
+    <form style="text-align: center;">
+   		<br>
+   		
+        <div>
+            <p style="font-weight: bold">1. 여러 사람들과 두루두루 어울리는 걸 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question1" value="E"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question1" value="I"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">2. 당신은 주도적으로 사람들과 만나고 대화를 주도하나요?</p>
+            <label>
+                <input type="radio" name="question2" value="E"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question2" value="I"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">3. 사람들과 함께 시간을 보낼 때, 활발하게 대화하고 활동하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question3" value="E"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question3" value="I"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">4. 사회적인 모임에서 당신은 관심과 주목을 받는 것을 좋아하시나요?</p>
+            <label>
+                <input type="radio" name="question4" value="E"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question4" value="I"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">5. 새로운 환경이나 도전에 직면했을 때, 타인과 협력하고 지원을 받는 것을 중요시하시나요?</p>
+            <label>
+                <input type="radio" name="question5" value="E"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question5" value="I"> B. 아니다
+            </label><br><br><br>
+        </div>
+        
+        <div>
+            <p style="font-weight: bold">6. 세부 사항에 집중하고 구체적인 사실을 중요시하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question6" value="S"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question6" value="N"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">7. 현재의 사실과 경험에 의존하여 판단하고 문제를 해결하는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question7" value="S"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question7" value="N"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">8. 미래의 가능성과 전략적인 아이디어에 관심을 가지며 비전을 추구하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question8" value="N"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question8" value="S"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">9. 추상적인 개념과 아이디어에 관심을 가지며 사물을 심층적으로 이해하려는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question9" value="N"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question9" value="S"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">10. 새로운 아이디어를 발굴하거나 문제를 해결하기 위해 직관과 창의력을 사용하는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question10" value="N"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question10" value="S"> B. 아니다
+            </label><br><br><br>
+        </div>
+        
+        <div>
+            <p style="font-weight: bold">11. 감정적인 측면보다 논리와 분석에 더 중점을 두며 결정을 내리는 편인가요?</p>
+            <label>
+                <input type="radio" name="question11" value="T"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question11" value="F"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">12. 타인의 의견이나 감정에 대해 이해하고 공감하는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question12" value="F"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question12" value="T"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">13. 자신의 감정을 표현하고 표현된 감정에 따라 행동하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question13" value="F"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question13" value="T"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">14. 객관적인 사실과 데이터를 바탕으로 판단하고 결정하는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question14" value="T"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question14" value="F"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">15. 의사 결정 시에는 객관적인 판단과 사실을 우선시하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question15" value="T"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question15" value="F"> B. 아니다
+            </label><br><br><br>
+        </div>
+        
+        <div>
+            <p style="font-weight: bold">16. 일정과 계획을 세우는 것을 좋아하나요?</p>
+            <label>
+                <input type="radio" name="question16" value="J"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question16" value="P"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">17. 결정을 내릴 때 여러 가지 가능성을 열어두고 유연하게 대처하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question17" value="P"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question17" value="J"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">18. 마감 기한 끝까지 작업을 미루는 편인가요?</p>
+            <label>
+                <input type="radio" name="question18" value="P"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question18" value="J"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">19. 일과 생활에서 변화와 새로운 경험을 추구하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question19" value="P"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question19" value="J"> B. 아니다
+            </label><br><br><br>
+        </div>
+        <div>
+            <p style="font-weight: bold">20. 계획을 세우는 것보다 현재의 상황에 대처하는 데 집중하는 편인가요?</p>
+            <label>
+                <input type="radio" name="question20" value="P"> A. 그렇다
+            </label>&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="question20" value="J"> B. 아니다
+            </label><br><br><br>
+        </div>
+        
+        
+        <br>
+        <button type="button" id="btnSubmit">나의 MBTI는?</button>
+        <br><br><br>
+    </form>
+    
+</body>
+</html>

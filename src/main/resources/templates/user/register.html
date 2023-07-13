@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
+	rel="stylesheet">
+<script src="https://kit.fontawesome.com/53a8c415f1.js"
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" th:href="@{/login/login.css}">
+
+
+</head>
+	<style>
+        .text-danger {
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+<body>
+
+		<div class="container" id="container">
+			<div class="form-container sign-up-container">
+			 <form name="frmRegister" id="frmRegister" action="/user/register"  method="POST">
+				<h1>Create Account</h1>
+				<span>or use your email for registration</span> 
+   					<input type="text" id="userId" name="userId" placeholder="id" required>
+					<!-- <small th:if="${errorMessage}" class="text-danger" th:text="${errorMessage}"></small> -->
+					
+				
+                    <input type="password" id="userPassword" name="userPassword" placeholder="password" required>
+
+                    <input type="email" id="userEmail" name="userEmail" placeholder="email" required>
+
+                    <input type="text" id="userName" name="userName" placeholder="name" required>
+                    
+                    
+				<button type="submit" id="btnSubmit" class="btn btn-primary">Sign Up</button>
+				</form>
+			</div>
+			<div class="form-container sign-in-container">
+			 <form name="frmLogin" id="frmLogin" action="/login/login" method="POST">
+				<h1>Sign in</h1>
+				
+				<span>or use your account</span> 
+                    <input type="text" id="loginUserId" name="userId" placeholder="id" required>
+
+                    <input type="password" id="loginUserPassword" name="userPassword" placeholder="password" required>
+				<button type="submit" id="btnLogin">Sign In</button>
+			</form>
+			</div>
+			<div class="overlay-container">
+				<div class="overlay">
+					<div class="overlay-panel overlay-left">
+						<h1>환영합니다!</h1>
+						<p>계속 연결하려면 개인 정보로 로그인하십시오.</p>
+						<button class="ghost" id="signIn">Sign In</button>
+					</div>
+					<div class="overlay-panel overlay-right">
+						<h1>계정이 없으신가요?</h1>
+						<p>개인 정보를 입력하고 회원가입을 완료해주세요.</p>
+						<button class="ghost" id="signUp">Sign Up</button>
+					</div>
+				</div>
+			</div>
+			</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/login.js"></script>
+ <script>
+ $(document).ready(function() {
+	 $('#frmRegister').submit(function(event) {
+	        event.preventDefault(); // 폼 기본 동작 방지
+
+	        var formData = $(this).serialize(); // 폼 데이터 직렬화
+	        
+	       var userId = $('#userId').val();
+           var userPassword = $('#userPassword').val();
+           var userName = $('#userName').val();
+           var userEmail = $('#userEmail').val();
+           
+           const userId_regex = /^[a-z0-9]{4,20}$/;
+           const userPassword_regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/;
+           const userName_regex = /^[가-힣]{2,50}$/;
+           const userEmail_regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+        	     
+        	 
+           if(userId == "") {
+        	   alert("아이디를 입력해주세요");
+        	   $('#userId').focus();
+        	   return;
+           }
+           
+           if(!userId_regex.test(userId)) {
+        	   alert("아이디는 영어 소문자와 숫자만 사용하여 4~20자리여야 합니다.");
+        	   $('#userId').focus();
+        	   return;
+           }
+           
+           if(userPassword == "") {
+        	   alert("비밀번호를 입력해주세요");
+        	   $('#userPassword').focus();
+        	   return;
+           }
+          
+           if(!userPassword_regex.test(userPassword)) {
+        	   alert("비밀번호는 8~16자리수여야 합니다. 영문 대소문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.");
+        	   $('#userPassword').focus();
+        	   return;
+           }
+           
+           if(userName == "") {
+        	   alert("이름를 입력해주세요");
+        	   $('#userName').focus();
+        	   return;
+           }
+           
+           if(!userName_regex.test(userName)) {
+        	   alert("이름은 한글로 입력해주세요. 길이는 2자 ~ 50자 이내로 입력하세요.");
+        	   $('#userName').focus();
+        	   return;
+           }
+           
+           
+           
+           if(userEmail == "") {
+        	   alert("이메일를 입력해주세요");
+        	   $('#userEmail').focus();
+        	   return;
+           }
+           
+           if(!userEmail_regex.test(userEmail)) {
+        	   alert("이메일 형식으로 입력해주세요 \n 'a@naver.com'");
+        	   $('#userEmail').focus();
+        	   return;
+           }
+	        
+	        
+	        $.ajax({
+	            type: 'POST',
+	            url: '/user/register',
+	            data: formData,
+	            dataType: 'json',
+	            success: function(response) {
+	            	if (response.success) {
+	                    alert('회원 등록이 완료되었습니다.');
+	                 // 회원 등록이 성공한 경우 Sign In 화면으로 전환
+	                    showSignInForm();
+	                 
+	                 // 입력 필드 초기화
+	                    $('#frmRegister')[0].reset();
+	            	} else {
+	            		var duplicateResponse = { duplicate: false }; // 다른 이름의 변수로 초기화
+	                    if (response.duplicate === true) {
+	                        alert('이미 사용 중인 아이디입니다.');
+	                    } else {
+	                        alert('회원 등록에 실패하였습니다.');
+	                    }
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                if (xhr.status === 409) {
+	                    alert("이미 사용 중인 아이디입니다.");
+	                } else {
+	                    alert('회원 등록에 실패하였습니다.');
+	                }
+	            }
+	        });
+	    });
+
+		
+	    $('#frmLogin').submit(function(event) {
+            event.preventDefault(); // 폼 기본 동작 방지
+
+            const loginUserId = $('#loginUserId').val();
+            const loginUserPassword = $('#loginUserPassword').val();
+
+            // Validate the form data
+            if (loginUserId.trim() === '') {
+                alert('아이디를 입력하세요.');
+                return;
+            }
+
+            if (loginUserPassword.trim() === '') {
+                alert('비밀번호를 입력하세요.');
+                return;
+            }
+
+            // Create the form data object
+            const loginFormData = {
+                userId: loginUserId,
+                userPassword: loginUserPassword
+            };
+
+            // Send the form data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/login/login',
+                data: loginFormData,
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    if (data.success) {
+                        // 로그인 성공 시 리다이렉트 처리
+                        alert('로그인에 성공하셨습니다.');
+                        window.location.href = '/'; // 리다이렉트할 페이지 경로
+                    } else {
+                        // 인증 실패 시 처리
+                        alert('로그인에 실패하였습니다.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // 에러 처리
+                    alert('로그인에 실패하였습니다.');
+                }
+            });
+        });
+	    
+	 // Sign In 화면으로 전환하는 함수
+	    function showSignInForm() {
+	        $('#container').removeClass('right-panel-active');
+	    }
+    });
+
+    </script>
+</body>
+</html>

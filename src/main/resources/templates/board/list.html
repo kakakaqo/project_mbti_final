@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>후기 게시판</title>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+body {
+   margin: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+/* 폼 스타일 */
+form {
+   margin: 20px auto;
+   width: 600px;
+   background-color: #fff;
+   padding: 20px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+   margin-bottom: 1px;
+}
+
+/* 레이블 스타일 */
+label {
+   display: block;
+   font-weight: bold;
+   margin-bottom: 5px;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"], textarea {
+   width: 100%;
+   padding: 1px;
+   border: 1px solid #ccc;
+   border-radius: 10px;
+}
+
+/* 버튼 스타일 */
+.btn {
+   padding: 10px 20px;
+   background-color: #4CAF50;
+   color: #fff;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+}
+
+/* 버튼 호버 스타일 */
+.btn:hover {
+   background-color: #45a049;
+}
+
+/* 댓글 스타일 */
+.comment-form {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+}
+
+/* 댓글 입력 필드 스타일 */
+.comment-form .form-group {
+   flex-basis: calc(50% - 10px);
+}
+
+/* 댓글 버튼 스타일 */
+.comment-form .btn {
+   flex-basis: 100%;
+   width: 100%;
+}
+
+ .col-user-id {
+  width: 100px;
+  background-color: white;
+}
+
+.col-user-delete {
+  width: 70px;
+  background-color: white;
+}
+
+.col-content {
+  width: 1200px;
+  background-color: white;
+  white-space: pre-line;
+  text-align: left; 
+}
+
+.col-date {
+  width: 157px;
+  background-color: white;
+}
+
+.col-actions {
+  width: 70px;
+  background-color: white;
+} 
+
+#boardContent {
+   height: 50px;
+   width: 100px;
+   background-color: powderblue;
+   font-size: 20px; /* 글씨 크기를 20px로 설정 */
+}
+
+.container {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 20px;
+   background-color: white;
+}
+
+.table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.table th, .table td {
+   border: 1px solid #ccc;
+   padding: 8px;
+}
+
+.table th {
+   background-color: #f2f2f2;
+}
+
+.table tbody tr:nth-child(even) {
+   background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+   background-color: #ebebeb;
+}
+
+.create-button {
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+.create-button button {
+   padding: 8px 16px;
+   background-color: #4CAF50;
+   color: #fff;
+   border: none;
+   cursor: pointer;
+}
+
+.create-button button:hover {
+   background-color: #45a049;
+}
+
+.footer {
+   background-color: #f2f2f2;
+   padding: 10px;
+   text-align: center;
+   margin-top: auto;
+   position: fixed;
+   bottom: 0;
+   width: 99%;
+}
+
+.pagination {
+   margin: 10px 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.pagination li {
+   margin: 0 5px;
+   list-style: none;
+}
+
+.pagination li a {
+   text-decoration: none;
+   padding: 5px 10px;
+   background-color: #f2f2f2;
+   color: #333;
+   border-radius: 5px;
+}
+
+.pagination li.active a {
+   background-color: #4CAF50;
+   color: #fff;
+}
+</style>
+
+</head>
+<body>
+
+	<div class="footer">
+		<div class="container">
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" class="col-user-id">유저아이디</th>
+						<th scope="col" class="col-content">내용</th>
+						<th scope="col" class="col-date">작성일</th>
+						<th scope="col" class="col-actions">
+							<img src="/assets/img/good.png" alt="이미지">
+						</th>
+						<th scope="col" class="col-user-delete">삭제</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="board : ${result.dtoList}">
+						<td th:text="${board.userId}" class="col-user-id" ></td>
+						<td th:text="${board.boardContent}" class="col-content"></td>
+						<td th:text="${board.regDate}" class="col-date"></td>
+
+						<!-- 좋아요 버튼 부분 -->
+						<td class="col-actions">
+							<!-- th:if =  로그인 상태일 때만 좋아요 버튼을 활성화 --> <th:block
+								th:if="${session.userId}">
+								<button class="btn btn-outline-primary"
+									th:data-board-id="${board.boardId}" onclick="showMessage(this)">좋아요</button>
+								<span class="hit-count" th:text="${board.boardHit}"></span>
+							</th:block> <!-- th:unless =  로그인 상태일 때만 좋아요 버튼을 비활성화 --> <th:block
+								th:unless="${session.userId}">
+								<button class="btn btn-outline-primary"
+									th:data-board-id="${board.boardId}" disabled>좋아요</button>
+								<span class="hit-count" th:text="${board.boardHit}"></span>
+							</th:block>
+						</td>
+
+						<td class="col-user-delete">
+							<!-- 로그인 상태일 때만 삭제 버튼을 활성화 --> <th:block
+								th:if="${session.userId == board.userId}">
+								<a th:href="@{/board/delete/{boardId}(boardId=${board.boardId}, mbti=${mbti})}">
+									<button type="button" class="btn btn-outline-warning">삭제</button>
+								</a>
+							</th:block> 
+							
+							<!-- 로그인 상태가 아닐 때는 삭제 버튼을 비활성화 --> 
+							<th:block th:unless="${session.userId == board.userId}">
+								<button type="button" class="btn btn-outline-warning"
+									style="display: none;" disabled>삭제</button>
+							</th:block>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<form id="boardForm" name="boardForm" action="/board/list"
+				th:action="@{/board/list}" method="POST" style="width: 97%;">
+				<input type="hidden" id="userId" name="userId" th:value="${session.userId}" />
+				<input type="hidden" id="mbti" name="mbti" th:value="${mbti}" />	
+				<!-- 댓글 폼 -->
+				<div class="comment-form">
+					<!-- 후기 내용 -->
+					<div class="form-group">
+						<label for="boardContent"></label>
+						<textarea id="boardContent" name="boardContent" required
+							style="width: 190%"></textarea>
+					</div>
+					<!-- 저장 버튼 -->
+					<div class="create-button">
+						<input type="button" id="btnSubmit" class="btn btn-primary" value="글쓰기" style="height: 55px;">
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!-- 페이징 처리 -->
+		<div>
+			<ul class="pagination">
+
+				<li th:class=" 'page-item ' + ${result.page == page?'active':''} "
+					th:each="page: ${result.pageList}"><a class="page-link"
+					th:href="@{/board/list/__${mbti}__ (page=${page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
+						[[${page}]] </a></li>
+			</ul>
+		</div>
+		<!-- 페이징 처리 끝 -->
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+
+   // 폼 제출 이벤트 핸들러
+  $(document).ready(function() {
+  $('#btnSubmit').on('click', function(event) {
+    event.preventDefault();
+
+    var boardContent = $('#boardContent').val();
+
+    $.ajax({
+      type: 'GET',
+      url: '/board/isLoggedIn',
+      success: function(response) {
+        var isLoggedIn = response.isLoggedIn;
+
+        if (isLoggedIn) {
+          if (boardContent.length < 10) {
+            alert('후기 내용은 최소 10글자 이상이어야 합니다.');
+            return;
+          }
+
+          $('#boardForm').submit();
+          alert('후기 등록이 완료되었습니다.');
+        } else {
+          alert("댓글을 달기 위해서는 로그인이 필요합니다.");
+        }
+      },
+      error: function(xhr, status, error) {
+        alert('로그인 상태를 확인하는 중 오류가 발생했습니다.');
+      }
+    });
+  });
+});
+
+function showMessage(buttonElement) {
+  var boardId = $(buttonElement).data('boardId');
+  var hitCountElement = $(buttonElement).siblings('.hit-count');
+  var currentHitCount = parseInt(hitCountElement.text());
+  var newHitCount = currentHitCount + 1;
+  hitCountElement.text(newHitCount);
+
+  var url = '/board/increaseHit/' + boardId;
+  var data = {
+    newHitCount: newHitCount
+  };
+
+  $.ajax({
+    url: url,
+    method: 'POST',
+    data: data,
+    success: function(response) {},
+    error: function(error) {
+      console.error('조회수 증가 중 오류가 발생했습니다.', error);
+    }
+  });
+}
+	</script>
+</body>
+</html>
