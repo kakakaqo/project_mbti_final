@@ -92,7 +92,15 @@ input[type="text"], textarea {
   width: 1200px;
   background-color: white;
   white-space: pre-line;
-  text-align: left; 
+}
+
+.col-content1 {
+  width: 1200px;
+  background-color: white;
+  white-space: pre-line;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .col-date {
@@ -217,7 +225,7 @@ input[type="text"], textarea {
 				<tbody>
 					<tr th:each="board : ${result.dtoList}">
 						<td th:text="${board.userId}" class="col-user-id" ></td>
-						<td th:text="${board.boardContent}" class="col-content"></td>
+						<td th:text="${board.boardContent}" class="col-content1"></td>
 						<td th:text="${board.regDate}" class="col-date"></td>
 
 						<!-- 좋아요 버튼 부분 -->
